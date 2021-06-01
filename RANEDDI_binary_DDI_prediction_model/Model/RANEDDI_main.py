@@ -26,7 +26,7 @@ if __name__ == "__main__":
     config = dict()
     config['n_drugs'] = data_generator.n_drugs
     config['n_relations'] = data_generator.n_relations
-    config['w_sp_matrix'] = data_generator.w_sp_matrix
+    # config['w_sp_matrix'] = data_generator.w_sp_matrix
 
     "Load the KG triplets."
     config['all_h_list'] = data_generator.all_h_list

@@ -31,16 +31,11 @@ class RANEDDI(object):
 
         self.lr = args.lr
 
-        # settings for CF part.
-        self.emb_dim = args.embed_size
         self.batch_size = args.batch_size
 
-        # settings for KG part.
         self.kge_dim = args.kge_size
-        self.batch_size_kg = args.batch_size_kg
+        self.emb_dim = args.kge_size
 
-        self.weight_size = eval(args.layer_size)
-        self.n_layers = len(self.weight_size)
 
         self.regs = eval(args.regs)
         self.verbose = args.verbose
@@ -68,7 +63,6 @@ class RANEDDI(object):
         self.r = tf.placeholder(tf.int32, shape=[None], name='r')
         self.pos_t = tf.placeholder(tf.int32, shape=[None], name='pos_t')
         self.neg_t = tf.placeholder(tf.int32, shape=[None], name='neg_t')
-        # self.node_dropout = tf.placeholder(tf.float32, shape=[None])
         self.mess_dropout = tf.placeholder(tf.float32, shape=[None])
 
     def _build_weights(self):
@@ -94,16 +88,6 @@ class RANEDDI(object):
 
         all_weights['alpha'] = tf.Variable(relation_initial,name = 'arb')
 
-        # all_weights['relation_trans'] = tf.Variable(initializer([2*self.kge_dim, 2*self.kge_dim]),
-        #                                             name='relation_trans')
-        all_weights['wh'] = tf.Variable(initializer([2*self.kge_dim,1]),
-                                                    name='wh')
-        all_weights['wt'] = tf.Variable(initializer([2*self.kge_dim,1]),
-                                                    name='wt')
-        all_weights['drug_trans'] = tf.Variable(initializer([2*self.kge_dim, 2*self.kge_dim]),
-                                                    name='drug_trans')
-        all_weights['entity_trans'] = tf.Variable(initializer([2*self.kge_dim, 2*self.kge_dim]),
-                                                    name='entity_trans')
         relation_d_att = np.random.randn(self.n_relations,self.n_drugs,1).astype(np.float32)
         relation_e_att = np.random.randn(self.n_relations,self.n_entities,1).astype(np.float32)
         all_weights['relation_d_att'] = tf.Variable(relation_d_att,name='relation_d_att')
@@ -169,8 +153,7 @@ class RANEDDI(object):
         neg_scores = tf.reduce_sum(tf.multiply(self.d_e, self.neg_e), axis=1)
 
         regularizer = tf.nn.l2_loss(self.d_e) + tf.nn.l2_loss(self.pos_e) + tf.nn.l2_loss(self.neg_e) + \
-                tf.nn.l2_loss(self.weights['relation_matrix']) +tf.nn.l2_loss(self.weights['wh']) + \
-                tf.nn.l2_loss(self.weights['wt'])
+                tf.nn.l2_loss(self.weights['relation_matrix']) 
         regularizer = regularizer / self.batch_size
 
         # maxi = tf.log(tf.nn.sigmoid(pos_scores - neg_scores -self.margin))

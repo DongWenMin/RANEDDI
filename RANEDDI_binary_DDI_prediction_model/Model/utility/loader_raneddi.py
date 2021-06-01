@@ -9,7 +9,7 @@ import bisect
 class RANEDDI_loader(Data):
     def __init__(self, args, path):
         super().__init__(args, path)
-        self.w_sp_matrix = self._get_w_sp_matrix()
+        # self.w_sp_matrix = self._get_w_sp_matrix()
         # generate the sparse adjacency matrices for drug-item interaction & relational kg data.
         self.adj_list, self.adj_r_list = self._get_relational_adj_list()
         self.n_relations = 86
@@ -47,29 +47,29 @@ class RANEDDI_loader(Data):
             sparse_adj_list.append(sp.coo_matrix((np.array(values)/2, (h_position1, t_position1)), shape=(self.n_drugs, adj_size-self.n_drugs)))
         return sparse_adj_list
 
-    def _get_w_sp_matrix(self):
-        train_data = self.train_data
-        train_row = train_data[:,0]
-        train_col = train_data[:,1]
-        values = np.array([1 for i in range(len(train_row))])
-        #药物个数，特征个数
-        n_drug = self.n_drugs
-        n_feature = 0
-        #先转稀疏矩阵
-        ddi_sp = sp.coo_matrix((values,(train_row,train_col)),shape=(n_drug,n_drug))
-        ddi_sp1 = sp.coo_matrix((values,(train_col,train_row)),shape=(n_drug,n_drug))
-        #ddi的行列
-        ddi_row = ddi_sp.row
-        ddi_col = ddi_sp.col+n_drug
-        ddi_row1 = ddi_sp1.row+n_drug
-        ddi_col1 = ddi_sp1.col
-        #最终的行列
-        rows =  np.concatenate((ddi_row,ddi_row1))
-        cols =  np.concatenate((ddi_col,ddi_col1))
-        values = np.concatenate((ddi_sp.data,ddi_sp.data))
-        #
-        w_sp_matrix = sp.coo_matrix((values, (rows, cols)), shape=(n_drug*2 , n_drug*2))
-        return w_sp_matrix
+    # def _get_w_sp_matrix(self):
+    #     train_data = self.train_data
+    #     train_row = train_data[:,0]
+    #     train_col = train_data[:,1]
+    #     values = np.array([1 for i in range(len(train_row))])
+    #     #药物个数，特征个数
+    #     n_drug = self.n_drugs
+    #     n_feature = 0
+    #     #先转稀疏矩阵
+    #     ddi_sp = sp.coo_matrix((values,(train_row,train_col)),shape=(n_drug,n_drug))
+    #     ddi_sp1 = sp.coo_matrix((values,(train_col,train_row)),shape=(n_drug,n_drug))
+    #     #ddi的行列
+    #     ddi_row = ddi_sp.row
+    #     ddi_col = ddi_sp.col+n_drug
+    #     ddi_row1 = ddi_sp1.row+n_drug
+    #     ddi_col1 = ddi_sp1.col
+    #     #最终的行列
+    #     rows =  np.concatenate((ddi_row,ddi_row1))
+    #     cols =  np.concatenate((ddi_col,ddi_col1))
+    #     values = np.concatenate((ddi_sp.data,ddi_sp.data))
+    #     #
+    #     w_sp_matrix = sp.coo_matrix((values, (rows, cols)), shape=(n_drug*2 , n_drug*2))
+    #     return w_sp_matrix
 
 
     def _get_relational_adj_list(self):
