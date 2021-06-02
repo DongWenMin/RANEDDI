@@ -32,6 +32,7 @@ class RANEDDI(object):
         self.lr = args.lr
 
         self.batch_size = args.batch_size
+        self.weight_size = eval(args.layer_size)
 
         self.kge_dim = args.kge_size
         self.emb_dim = args.kge_size
@@ -141,9 +142,9 @@ class RANEDDI(object):
         relation = self.weights['re_relation_embed']
         relation = (tf.nn.l2_normalize(relation, dim=1)-0.5)*pi
 
-        re_r_e = tf.nn.embedding_lookup(relation, r)
-        re_r_e = tf.cos(re_r_e)
-        im_r_e = tf.sin(re_r_e)
+        r_e = tf.nn.embedding_lookup(relation, r)
+        re_r_e = tf.cos(r_e)
+        im_r_e = tf.sin(r_e)
 
         return re_h_e, re_pos_t_e, re_neg_t_e, im_h_e, im_pos_t_e, im_neg_t_e, re_r_e, im_r_e
 

@@ -15,7 +15,10 @@ class Data(object):
 
         # kg_file = path + '/data/kg_final_1_t.txt'
 
-        npz_file = path +'/deepddi.npz'
+        if args.dataset == 'deepddi_data':
+          npz_file = path +'/deepddi.npz'
+        else:
+          npz_file = path +'/1317_drug_v4.npz'
         data = np.load(npz_file,allow_pickle=True)
         data = data['data'].item()
 

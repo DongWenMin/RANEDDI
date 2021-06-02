@@ -56,7 +56,7 @@ if __name__ == "__main__":
     *********************************************************
     Train.
     """
-    print('current margin:',model.margin)
+    # print('current margin:',model.margin)
 
     for epoch in range(args.epoch):
           t1 = time()
@@ -75,17 +75,14 @@ if __name__ == "__main__":
               base_loss += batch_base_loss
               kge_loss = batch_kge_loss1 + batch_kge_loss2 + kge_loss
               reg_loss = reg_loss + batch_reg_loss1 + batch_reg_loss2
-              break
+              # break
           perf_str = 'Epoch %d [%.1fs]: train==[%.5f=%.5f + %.5f + %.5f]' % (
                       epoch, time() - t1, loss, base_loss, kge_loss, reg_loss)
           print(perf_str)
-          if epoch%3 == 0:
+          if epoch%args.verbose == 0:
               t2 = time()
               drugs_to_test = list(data_generator.test_drug_dict.keys())
               ret = test(sess, model, drugs_to_test,train_dict,test_dict,test_neg_dict, drop_flag=False, batch_test_flag=batch_test_flag)
               t3 = time()
 
-              if args.verbose > 0:
-                  print('time:',t3-t1,'performance : ',ret)
-                  if ret > max_aupr:
-                      max_aupr = ret
+              

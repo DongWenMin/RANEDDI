@@ -13,7 +13,7 @@ def parse_args():
                         help='Choose a dataset from {deepddi_data,collected_data}')
     parser.add_argument('--pretrain', type=int, default=1,
                         help='0: No pretrain, -1: Pretrain with the learned embeddings, 1:Pretrain with stored models.')
-    parser.add_argument('--verbose', type=int, default=1,
+    parser.add_argument('--verbose', type=int, default=3,
                         help='Interval of evaluation.')
     parser.add_argument('--epoch', type=int, default=150,
                         help='Number of epoch.')
@@ -25,9 +25,11 @@ def parse_args():
                         help='CF batch size.')
 
     parser.add_argument('--regs', nargs='?', default='[1e-5,1e-5,1e-2]',
-                        help='Regularization for user and item embeddings.')
-    parser.add_argument('--lr', type=float, default=0.001,
+                        help='Regularization')
+    parser.add_argument('--lr', type=float, default=0.0001,
                         help='Learning rate.')
+    parser.add_argument('--layer_size', nargs='?', default='[100]',
+                        help='Output embedding sizes')
 
     parser.add_argument('--model_type', nargs='?', default='raneddi',
                         help='Specify a loss type from {raneddi}.')

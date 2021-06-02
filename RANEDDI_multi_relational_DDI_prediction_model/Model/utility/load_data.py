@@ -13,7 +13,10 @@ class Data(object):
         train_file = path + '/10_fold/train0.txt'
         test_file = path + '/10_fold/test0.txt'
 
-        npz_file = path +'/deepddi.npz'
+        if args.dataset=='deepddi_data':
+            npz_file = path +'/deepddi.npz'
+        else:
+            npz_file = path +'/1317_drug_v4.npz'
         dataset = np.load(npz_file,allow_pickle=True)
         dataset = dataset['data'].item()
 
@@ -23,8 +26,8 @@ class Data(object):
         self.n_train, self.n_test = 0, 0
         self.n_drugs, self.n_items = 0, 0
 
-        self.train_data, self.train_dict = self._load_ratings(train_file)
-        self.test_data, self.test_dict = self._load_ratings(test_file)
+        self.train_data, self.train_dict = self._load_data(train_file)
+        self.test_data, self.test_dict = self._load_data(test_file)
         self.exist_drugs = self.train_dict.keys()
         # self.train_dict,self.test_dict = self.get_train_test_dict(train_file,test_file)
 
@@ -65,7 +68,7 @@ class Data(object):
         return train_dict,test_dict
 
     # reading train & test interaction data.
-    def _load_ratings(self, file_name):
+    def _load_data(self, file_name):
         drug_dict = dict()
         inter_mat = list()
 
@@ -112,7 +115,7 @@ class Data(object):
         def sample_neg_items_for_u(u, num):
             neg_items = []
             while True:
-                neg_i_id = np.random.randint(low=0, high=self.n_items,size=1)[0]#随机采取负样本
+                neg_i_id = np.random.randint(low=0, high=self.n_items,size=1)[0]#Task2,随机采取负样本
                 if neg_i_id not in self.train_dict[u] and neg_i_id not in neg_items:
                     neg_items.append(neg_i_id)
                     break

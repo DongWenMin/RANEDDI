@@ -22,7 +22,6 @@ import random as rd
 
 cores = multiprocessing.cpu_count() // 2
 args = parse_args()
-Ks = eval(args.Ks)
 
 data_generator = RANEDDI_loader(args=args, path=args.data_path + args.dataset)
 batch_test_flag = False
@@ -33,20 +32,6 @@ BATCH_SIZE = args.batch_size
 
 lock = Lock()
 total_thread = 128
-
-
-def get_performance(drug_pos_test, r, auc, Ks):
-    precision, recall, ndcg, hit_ratio = [], [], [], []
-
-    for K in Ks:
-        precision.append(metrics.precision_at_k(r, K))
-        recall.append(metrics.recall_at_k(r, K, len(drug_pos_test)))
-        ndcg.append(metrics.ndcg_at_k(r, K))
-        hit_ratio.append(metrics.hit_at_k(r, K))
-
-    return {'recall': np.array(recall), 'precision': np.array(precision),
-            'ndcg': np.array(ndcg), 'hit_ratio': np.array(hit_ratio), 'auc': auc}
-
 
 #平衡标签
 def get_label_score(adj_recovered,test_dict,test_neg_dict):

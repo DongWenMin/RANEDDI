@@ -33,13 +33,10 @@ class RANEDDI(object):
 
         self.lr = args.lr
 
-        # settings for CF part.
         self.emb_dim = args.embed_size
         self.batch_size = args.batch_size
 
-        # settings for KG part.
-        self.dim = args.kge_size
-        # self.batch_size_kg = args.batch_size_kg
+        self.dim = args.embed_size
 
         self.weight_size = eval(args.layer_size)
         self.n_layers = len(self.weight_size)
@@ -50,6 +47,7 @@ class RANEDDI(object):
         self.regs = eval(args.regs)
         self.verbose = args.verbose
         self.margin = args.margin
+        self.B = args.B
 
         #分类器
         #三层
@@ -57,9 +55,11 @@ class RANEDDI(object):
         self.n_hidden1 = 200
         self.n_hidden2 = 100
         self.n_classes = 86
+        self.dnn_size = eval(args.dnn_size)
 
         self.all_sparse_adj_list = data_config['sparse_adj_list']#1317*1317
         self.sparse_adj_list = self._sparse_adj_list_process()
+        
 
     def _sparse_adj_list_process(self):
         sparse_adj_list = []
@@ -102,19 +102,11 @@ class RANEDDI(object):
                                                     name='im_relation_embed')
         all_weights['relation_mapping'] = tf.Variable(initializer([self.n_relations,2*self.dim]),
                                                     name='relation_mapping')
-        all_weights['relation_matrix'] = tf.Variable(initializer([30,2*self.dim,2*self.dim]),
+        all_weights['relation_matrix'] = tf.Variable(initializer([self.B,2*self.dim,2*self.dim]),
                                                     name='relation_matrix')
-        relation_initial = np.random.randn(self.n_relations, 30).astype(np.float32)
+        relation_initial = np.random.randn(self.n_relations, self.B).astype(np.float32)
 
         all_weights['alpha'] = tf.Variable(relation_initial,name = 'arb')
-        all_weights['wh'] = tf.Variable(initializer([2*self.dim,1]),
-                                                    name='wh')
-        all_weights['wt'] = tf.Variable(initializer([2*self.dim,1]),
-                                                    name='wt')
-        all_weights['drug1_trans'] = tf.Variable(initializer([2*self.dim, 2*self.dim]),
-                                                    name='drug1_trans')
-        all_weights['drug2_trans'] = tf.Variable(initializer([2*self.dim, 2*self.dim]),
-                                                    name='drug2_trans')
         relation_1_att = np.random.randn(self.n_relations,self.n_drug1,1).astype(np.float32)
         relation_2_att = np.random.randn(self.n_relations,self.n_drug2,1).astype(np.float32)
         all_weights['relation_1_att'] = tf.Variable(relation_1_att,name='relation_1_att')
@@ -127,12 +119,9 @@ class RANEDDI(object):
         all_weights['b_mlp_0'] = tf.Variable(
             initializer([1, self.weight_size_list[1]]), name='b_mlp_0')
 
-        all_weights['nn_w1'] = tf.Variable(initializer([self.n_input1, self.n_hidden1]), name='nn_w1')
-        all_weights['nn_b1'] = tf.Variable(initializer([1, self.n_hidden1]), name='nn_b1')
-        all_weights['nn_w2'] = tf.Variable(initializer([self.n_hidden1, self.n_hidden2]), name='nn_w2')
-        all_weights['nn_b2'] = tf.Variable(initializer([1, self.n_hidden2]), name='nn_b2')
-        all_weights['nn_w3'] = tf.Variable(initializer([self.n_hidden2, self.n_classes]), name='nn_w3')
-        all_weights['nn_b3'] = tf.Variable(initializer([1, self.n_classes]), name='nn_b3')
+        for i in range(1,len(self.dnn_size)):
+            all_weights['nn_w%d'%(i)] = tf.Variable(initializer([self.dnn_size[i-1], self.dnn_size[i]]), name='nn_w%d'%(i))
+            all_weights['nn_b%d'%(i)] = tf.Variable(initializer([1, self.dnn_size[i]]), name='nn_b%d'%(i))
 
         return all_weights
 
@@ -170,9 +159,9 @@ class RANEDDI(object):
         relation = self.weights['re_relation_embed']
         relation = (tf.nn.l2_normalize(relation, dim=1)-0.5)*pi
 
-        re_r_e = tf.nn.embedding_lookup(relation, r)
-        re_r_e = tf.cos(re_r_e)
-        im_r_e = tf.sin(re_r_e)
+        r_e = tf.nn.embedding_lookup(relation, r)
+        re_r_e = tf.cos(r_e)
+        im_r_e = tf.sin(r_e)
 
         return re_h_e, re_pos_t_e, re_neg_t_e, im_h_e, im_pos_t_e, im_neg_t_e, re_r_e, im_r_e
 
@@ -191,8 +180,7 @@ class RANEDDI(object):
 
         pos_kg_score = _get_kg_score(self.re_h_e, self.re_pos_t_e,  self.im_h_e,self.im_pos_t_e,  self.re_r_e, self.im_r_e )
         neg_kg_score = _get_kg_score(self.re_h_e, self.re_neg_t_e,  self.im_h_e,self.im_neg_t_e,  self.re_r_e, self.im_r_e )
-        #损失1 88.73
-        # margin = 2.0
+
         maxi = tf.log(tf.clip_by_value(tf.nn.sigmoid(pos_kg_score - neg_kg_score - self.margin),1e-8,1.0))
         kg_loss = tf.negative(tf.reduce_mean(maxi))
 
