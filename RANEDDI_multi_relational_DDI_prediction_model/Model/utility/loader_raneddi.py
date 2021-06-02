@@ -2,9 +2,7 @@ import numpy as np
 from utility.load_data import Data
 from time import time
 import scipy.sparse as sp
-import random as rd
 import collections
-import bisect
 
 class RANEDDI_loader(Data):
     def __init__(self, args, path):

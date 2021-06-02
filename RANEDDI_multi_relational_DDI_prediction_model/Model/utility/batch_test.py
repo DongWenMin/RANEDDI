@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 from scipy import interp
 
-from sklearn.cross_decomposition import PLSRegression
 from sklearn.preprocessing import label_binarize
 from sklearn.metrics import roc_auc_score,precision_recall_curve,auc
 from sklearn.metrics import roc_auc_score

@@ -1,4 +1,3 @@
-import collections
 import numpy as np
 import random as rd
 from collections import defaultdict
