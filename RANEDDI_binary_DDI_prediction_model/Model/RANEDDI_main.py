@@ -79,10 +79,8 @@ if __name__ == "__main__":
           perf_str = 'Epoch %d [%.1fs]: train==[%.5f=%.5f + %.5f + %.5f]' % (
                       epoch, time() - t1, loss, base_loss, kge_loss, reg_loss)
           print(perf_str)
-          if epoch%args.verbose == 0:
-              t2 = time()
-              drugs_to_test = list(data_generator.test_drug_dict.keys())
-              ret = test(sess, model, drugs_to_test,train_dict,test_dict,test_neg_dict, drop_flag=False, batch_test_flag=batch_test_flag)
-              t3 = time()
+
+    drugs_to_test = list(data_generator.test_drug_dict.keys())
+    ret = test(sess, model, drugs_to_test,train_dict,test_dict,test_neg_dict, drop_flag=False, batch_test_flag=batch_test_flag)
 
               

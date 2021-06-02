@@ -20,7 +20,6 @@ from utility.loader_raneddi import RANEDDI_loader
 cores = multiprocessing.cpu_count() // 2
 
 args = parse_args()
-Ks = eval(args.Ks)
 
 data_generator = RANEDDI_loader(args=args, path=args.data_path + args.dataset)
 batch_test_flag = False
