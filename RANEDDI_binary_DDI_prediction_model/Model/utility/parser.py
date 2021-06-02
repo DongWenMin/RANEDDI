@@ -13,7 +13,7 @@ def parse_args():
                         help='Choose a dataset from {deepddi_data,collected_data}')
     parser.add_argument('--pretrain', type=int, default=1,
                         help='0: No pretrain, -1: Pretrain with the learned embeddings, 1:Pretrain with stored models.')
-    parser.add_argument('--epoch', type=int, default=50,
+    parser.add_argument('--epoch', type=int, default=45,
                         help='Number of epoch.')
 
     parser.add_argument('--kge_size', type=int, default=64,
