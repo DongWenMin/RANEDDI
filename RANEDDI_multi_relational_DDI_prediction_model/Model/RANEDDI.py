@@ -49,12 +49,7 @@ class RANEDDI(object):
         self.margin = args.margin
         self.B = args.B
 
-        #分类器
-        #三层
-        self.n_input1 = 400
-        self.n_hidden1 = 200
-        self.n_hidden2 = 100
-        self.n_classes = 86
+        #DNN分类器
         self.dnn_size = eval(args.dnn_size)
 
         self.all_sparse_adj_list = data_config['sparse_adj_list']#1317*1317
@@ -230,8 +225,8 @@ class RANEDDI(object):
         self.opt = tf.train.AdamOptimizer(learning_rate=self.lr).minimize(self.loss)
 
     def _create_bi_interaction_embed5(self):
-        d1_embedding = tf.concat([self.weights['re_drug1_embed'],self.weights['im_drug1_embed']], axis=1)#1317*200
-        d2_embedding = tf.concat([self.weights['re_drug2_embed'],self.weights['im_drug2_embed']], axis=1)#1952*200
+        d1_embedding = tf.concat([self.weights['re_drug1_embed'],self.weights['im_drug1_embed']], axis=1)
+        d2_embedding = tf.concat([self.weights['re_drug2_embed'],self.weights['im_drug2_embed']], axis=1)
 
         ego_embeddings = tf.concat([d1_embedding, d2_embedding], axis=0)
         all_embeddings = [ego_embeddings]
@@ -243,8 +238,8 @@ class RANEDDI(object):
 
     def _create_bi_interaction_embed(self):
         pi = 3.14159265358979323846
-        d1_embedding = tf.concat([self.weights['re_drug1_embed'],self.weights['im_drug1_embed']], axis=1)#1317*200
-        d2_embedding = tf.concat([self.weights['re_drug2_embed'],self.weights['im_drug2_embed']], axis=1)#1952*200
+        d1_embedding = tf.concat([self.weights['re_drug1_embed'],self.weights['im_drug1_embed']], axis=1)
+        d2_embedding = tf.concat([self.weights['re_drug2_embed'],self.weights['im_drug2_embed']], axis=1)
 
         #使用R-GCN方式定义关系矩阵
         relation_embedding = []

@@ -225,8 +225,8 @@ class RANEDDI(object):
         self.total_opt = tf.compat.v1.train.AdamOptimizer(learning_rate=self.lr).minimize(self.total_loss)
 
     def _create_bi_interaction_embed5(self):
-        drug_embedding = tf.concat([self.weights['re_drug_embed'],self.weights['im_drug_embed']], axis=1)#1317*200
-        entity_embedding = tf.concat([self.weights['re_entity_embed'],self.weights['im_entity_embed']], axis=1)#1952*200
+        drug_embedding = tf.concat([self.weights['re_drug_embed'],self.weights['im_drug_embed']], axis=1)
+        entity_embedding = tf.concat([self.weights['re_entity_embed'],self.weights['im_entity_embed']], axis=1)
 
         ego_embeddings = tf.concat([drug_embedding, entity_embedding], axis=0)
         all_embeddings = [ego_embeddings]
@@ -238,8 +238,8 @@ class RANEDDI(object):
 
     def _create_bi_interaction_embed(self):
         pi = 3.14159265358979323846
-        drug_embedding = tf.concat([self.weights['re_drug_embed'],self.weights['im_drug_embed']], axis=1)#1317*200
-        entity_embedding = tf.concat([self.weights['re_entity_embed'],self.weights['im_entity_embed']], axis=1)#1952*200
+        drug_embedding = tf.concat([self.weights['re_drug_embed'],self.weights['im_drug_embed']], axis=1)
+        entity_embedding = tf.concat([self.weights['re_entity_embed'],self.weights['im_entity_embed']], axis=1)
 
         #使用R-GCN方式定义关系矩阵
         relation_embedding = []
