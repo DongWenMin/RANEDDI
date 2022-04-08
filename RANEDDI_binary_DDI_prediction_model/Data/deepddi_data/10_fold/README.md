@@ -1,5 +1,7 @@
 ### File format:
 
-target_drug_a neighbor_drug_a1 neighbor_drug_a2 neighbor_drug_a3 ...\
-target_drug_b neighbor_drug_b1 neighbor_drug_b2 neighbor_drug_b3 ... \
+target_drug_a neighbor_drug_a1 neighbor_drug_a2 neighbor_drug_a3 ...
+
+target_drug_b neighbor_drug_b1 neighbor_drug_b2 neighbor_drug_b3 ... 
+
 ...
