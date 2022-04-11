@@ -78,7 +78,7 @@ class RANEDDI(object):
         # message dropout (adopted on the convolution operations).
         self.mess_dropout = tf.placeholder(tf.float32, shape=[None])
 
-        self.type = tf.placeholder(tf.int32, shape=(None,self.n_classes))#one-hot
+        self.type = tf.placeholder(tf.int32, shape=(None,self.n_relations))#one-hot
 
     def _build_weights(self):
         all_weights = dict()
