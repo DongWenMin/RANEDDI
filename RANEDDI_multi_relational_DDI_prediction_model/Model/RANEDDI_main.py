@@ -40,7 +40,7 @@ if __name__ == "__main__":
     config = tf.compat.v1.ConfigProto()
     config.gpu_options.allow_growth = True
     sess = tf.compat.v1.Session(config=config)
-    sess.run(tf.compat.v1.global_variables_initializer)
+    sess.run(tf.compat.v1.global_variables_initializer())
 
     """
     *********************************************************
